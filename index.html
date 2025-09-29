@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Test API Italia</title>
+<style>
+body { font-family: Arial; padding: 20px; }
+button, input { margin: 5px; padding: 5px; }
+pre { background: #f4f4f4; padding: 10px; border: 1px solid #ddd; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<h1>Test API CRUD Italia</h1>
+
+<h2>Regioni</h2>
+<button onclick="carica('regioni.php')">GET Tutte</button>
+<input type="number" id="idRegione" placeholder="ID">
+<button onclick="carica('regioni.php?id=' + document.getElementById('idRegione').value)">GET per ID</button>
+<input type="text" id="nomeRegione" placeholder="Nome">
+<button onclick="carica('regioni.php?nome=' + document.getElementById('nomeRegione').value)">GET per Nome</button>
+
+<h3>POST Nuova Regione</h3>
+<input type="text" id="postNomeRegione" placeholder="Nome">
+<input type="number" id="postIdNazione" placeholder="ID Nazione">
+<button onclick="postRegione()">POST</button>
+
+<h3>PUT Aggiornamento Totale</h3>
+<input type="number" id="putIdRegione" placeholder="ID">
+<input type="text" id="putNomeRegione" placeholder="Nome">
+<input type="number" id="putIdNazione" placeholder="ID Nazione">
+<button onclick="putRegione()">PUT</button>
+
+<h3>PATCH Aggiornamento Parziale</h3>
+<input type="number" id="patchIdRegione" placeholder="ID">
+<input type="text" id="patchNomeRegione" placeholder="Nuovo Nome">
+<button onclick="patchRegione()">PATCH</button>
+
+<h3>DELETE Regione</h3>
+<input type="number" id="deleteIdRegione" placeholder="ID">
+<button onclick="deleteRegione()">DELETE</button>
+
+<h2>Risultato</h2>
+<pre id="output"></pre>
+
+<script>
+// Funzione base per GET
+function carica(url) {
+    fetch(url)
+      .then(r => r.json())
+      .then(d => document.getElementById("output").textContent = JSON.stringify(d, null, 2));
+}
+
+// Funzione POST
+function postRegione() {
+    let data = {
+        nome: document.getElementById("postNomeRegione").value,
+        id_nazione: parseInt(document.getElementById("postIdNazione").value)
+    };
+    fetch("regioni.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(d => document.getElementById("output").textContent = JSON.stringify(d, null, 2));
+}
+
+// Funzione PUT
+function putRegione() {
+    let data = {
+        id: parseInt(document.getElementById("putIdRegione").value),
+        nome: document.getElementById("putNomeRegione").value,
+        id_nazione: parseInt(document.getElementById("putIdNazione").value)
+    };
+    fetch("regioni.php", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(d => document.getElementById("output").textContent = JSON.stringify(d, null, 2));
+}
+
+// Funzione PATCH
+function patchRegione() {
+    let data = {
+        id: parseInt(document.getElementById("patchIdRegione").value),
+        nome: document.getElementById("patchNomeRegione").value
+    };
+    fetch("regioni.php", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(d => document.getElementById("output").textContent = JSON.stringify(d, null, 2));
+}
+
+// Funzione DELETE
+function deleteRegione() {
+    let id = parseInt(document.getElementById("deleteIdRegione").value);
+    fetch("regioni.php?id=" + id, { method: "DELETE" })
+      .then(r => r.json())
+      .then(d => document.getElementById("output").textContent = JSON.stringify(d, null, 2));
+}
+</script>
+</body>
+</html>
